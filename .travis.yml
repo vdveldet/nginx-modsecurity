@@ -1,0 +1,40 @@
+sudo: required
+language: python
+
+services:
+  - docker
+
+matrix:
+  include:
+  - python:
+    env:
+      - NAME="NGINX Container"
+      - IMAGE_NAME=vdveldet/nginx-modsecurity
+      - DOCKERFILE=Dockerfile
+      - VERSION=v0.1
+
+install: true
+
+script: pytest || true ? # This is needed for the build to complete
+
+before_install:
+  - docker build --file $DOCKERFILE -t $IMAGE_NAME .
+  - docker run -d -p 127.0.0.1:80:4567 --name $RUN_IMAGE_NAME $IMAGE_NAME                 # TEST if the build is running.
+  - docker ps -a
+  - docker logs $RUN_IMAGE_NAME
+  - echo "$DOCKERHUB_PASSWD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin docker.io
+  - docker tag "$IMAGE_NAME" "docker.io/${IMAGE_NAME}:latest"
+  - docker tag "$IMAGE_NAME" "docker.io/${IMAGE_NAME}:${VERSION}"
+
+deploy:
+  - provider: script
+    script: docker push "docker.io/${IMAGE_NAME}:latest"
+    on:
+      branch: master
+  - provider: script
+    script: docker push "docker.io/${IMAGE_NAME}:${VERSION}"
+    on:
+      branch: master
+
+after_script:
+  - docker pull "docker.io/${IMAGE_NAME}:latest"

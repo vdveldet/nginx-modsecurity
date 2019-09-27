@@ -1,2 +1,2 @@
 # nginx-modsecurity
-Nginx Server with mod security
+Nginx Server 1.17.3 with mod security 3.0.3

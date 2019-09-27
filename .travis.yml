@@ -29,7 +29,7 @@ before_install:
   - curl http://127.0.0.1/nginx_status                                          # This URL is configured in the docker
   - docker logs $RUN_IMAGE_NAME
   - mkdir deb
-  - docker cp $RUN_IMAGE_NAME:/ModSecurity/*.deb /deb/
+  - docker cp $RUN_IMAGE_NAME:/ModSecurity/*.deb deb/
   - docker cp $RUN_IMAGE_NAME:/ModSecurity-nginx/nginx-${NGINX_VERSION}/objs/ngx_http_modsecurity_module.so deb/
   - ls -l deb/
   # From here the porduction docker is build

@@ -13,9 +13,9 @@ matrix:
       - IMAGE_NAME=vdveldet/nginx-modsecurity
       - IMAGE_COMPILE=nginx-compile
       - DOCKERFILE_COMPILE=Dockerfile_compile
-      - VERSION=v0.1
+      - VERSION=0.1
       - NGINX_VERSION=1.17.3
-      - MODSECURITY=3.0
+      - MODSECURITY=3
 
 install: true
 
@@ -24,12 +24,12 @@ script: pytest || true ? # This is needed for the build to complete
 before_install:
   # First a Compile docker that will deliver the .deb an .so file
   - docker build --file $DOCKERFILE_COMPILE -t $IMAGE_COMPILE --build-arg VERSION=${VERSION} --build-arg NGINX_VERSION=${NGINX_VERSION} --build-arg MODSECURITY=${MODSECURITY} .
-  - docker run -d -p 127.0.0.1:80:80 --name $RUN_IMAGE_NAME $IMAGE_COMPILE  # Test is build is running
+  - docker run -d -p 127.0.0.1:80:80 --name $RUN_IMAGE_NAME $IMAGE_COMPILE      # Test is build is running
   - docker ps -a
+  - curl http://127.0.0.1/nginx_status                                          # This URL is configured in the docker
   - docker logs $RUN_IMAGE_NAME
-  - curl http://127.0.0.1/nginx_status
-  - mkdir deb
-  - docker cp $RUN_IMAGE_NAME:/ModSecurity/modsecurity_*.deb /deb/
+  - mkdir /deb
+  - docker cp $RUN_IMAGE_NAME:/ModSecurity/*.deb /deb/
   - docker cp $RUN_IMAGE_NAME:/ModSecurity-nginx/nginx-${NGINX_VERSION}/objs/ngx_http_modsecurity_module.so /deb/
   - ls -l /deb/
   # From here the porduction docker is build

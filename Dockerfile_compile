@@ -22,7 +22,7 @@ RUN cd ModSecurity && \
   cd ..
 
 RUN  cd ModSecurity && \
-  echo ${MODSECURITY} && \
+  export MODSECURITY && \
   checkinstall --pkgname="modsecurity" --pkgversion="${MODSECURITY}" --maintainer="vdvelde.t@gmail.com" --nodoc --install=yes -y && \
   cd ..
 

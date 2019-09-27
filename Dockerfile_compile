@@ -1,17 +1,18 @@
 FROM vdveldet/base-os
 
+ENV VERSION ${VERSION}
+ENV NGINX_VERSION ${NGINX_VERSION}
+ENV MODSECURITY ${MODSECURITY}
+
 MAINTAINER vdvelde.t@gmail.com
 LABEL Description="nginx 1.17.3 server + mod_security 3" \
       version="${VERSION}"
-
-ENV VERSION=${VERSION}
-ENV NGINX_VERSION=${NGINX_VERSION}
-ENV MODSECURITY=${MODSECURITY}
 
 # Add Repo
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install software-properties-common && \
   DEBIAN_FRONTEND=noninteractive LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/nginx-mainline
 
+# Download the latest compiled version
 RUN apt-get install -y nginx
 RUN apt-get install -y apt-utils autoconf automake build-essential git libcurl4-openssl-dev libgeoip-dev liblmdb-dev libpcre++-dev libtool libxml2-dev libyajl-dev pkgconf wget zlib1g-dev libyajl2 openssl libssl-dev libperl-dev libxslt-dev checkinstall
 

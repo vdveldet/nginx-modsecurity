@@ -14,7 +14,7 @@ matrix:
       - DOCKERFILE_COMPILE=Dockerfile_compile
       - VERSION=v0.1
       - NGINX_VERSION=1.17.3
-      - MODSECURITY=3.0.3
+      - MODSECURITY=3.0
 
 install: true
 

@@ -19,7 +19,7 @@ RUN cd ModSecurity && \
   ./configure && \
   make && \
   make install && \
-  checkinstall --pkgname="modsecurity" --pkgversion=${MODSECURITY} --maintainer="vdvelde.t@gmail.com" --nodoc --install=yes -y && \
+  checkinstall --pkgname="modsecurity" --pkgversion="${MODSECURITY}" --maintainer="vdvelde.t@gmail.com" --nodoc --install=yes -y && \
   cd ..
 
 # Compile Connector

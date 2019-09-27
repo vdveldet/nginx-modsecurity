@@ -11,16 +11,23 @@ matrix:
       - NAME="NGINX Container"
       - RUN_IMAGE_NAME=nginx-modsecurity
       - IMAGE_NAME=vdveldet/nginx-modsecurity
-      - DOCKERFILE=Dockerfile
+      - DOCKERFILE_COMPILE=Dockerfile_compile
       - VERSION=v0.1
+      - NGINX_VERSION=1.17.3
+      - MODSECURITY=3.0.3
 
 install: true
 
 script: pytest || true ? # This is needed for the build to complete
 
 before_install:
-  - docker build --file $DOCKERFILE -t $IMAGE_NAME .
-  - docker run -d -p 127.0.0.1:80:4567 --name $RUN_IMAGE_NAME $IMAGE_NAME                 # TEST if the build is running.
+  - docker build --file $DOCKERFILE_COMPILE -t $IMAGE_NAME .
+  - docker run -d -p 127.0.0.1:80:80 --name $RUN_IMAGE_NAME $IMAGE_NAME                 # TEST if the build is running.
+  - curl http://127.0.0.1/
+  - mkdir deb
+  - docker cp $RUN_IMAGE_NAME:/ModSecurity/modsecurity_${MODSECURITY}_amd64.deb /deb/
+  - docker cp $RUN_IMAGE_NAME:/ModSecurity-nginx/nginx-${NGINX_VERSION}/objs/ngx_http_modsecurity_module.so /deb/
+  - ls -l /deb/
   - docker ps -a
   - docker logs $RUN_IMAGE_NAME
   - echo "$DOCKERHUB_PASSWD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin docker.io
@@ -36,6 +43,23 @@ deploy:
     script: docker push "docker.io/${IMAGE_NAME}:${VERSION}"
     on:
       branch: master
+  - provider: releases
+      api_key:
+          secure:
+
+      file: $HOME/deployment/${PROJECT_NAME}-${TRAVIS_TAG}-${TARGET}.tar.gz
+      skip_cleanup: true
+      on:
+        tags: true
+        repo: ${IMAGE_NAME}
+        branch: master
+branches:
+  only:
+    # Pushes and PR to the master branch
+    - master
+    # Ruby regex to match tags. Required, or travis won't trigger deploys when
+    # a new tag is pushed. Version tags should be of the form: v0.1.0
+    - /^v\d+\.\d+\.\d+.*$/
 
 after_script:
   - docker pull "docker.io/${IMAGE_NAME}:latest"

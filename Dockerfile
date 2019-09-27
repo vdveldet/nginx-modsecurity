@@ -66,6 +66,7 @@ RUN NGINX_VERSION=$(nginx -v 2>&1| awk -F "/" {'print $2'} | awk {'print $1'}) &
   --with-threads --with-http_addition_module --with-http_geoip_module=dynamic --with-http_gunzip_module \
   --with-http_gzip_static_module --with-http_sub_module --with-stream=dynamic --with-stream_ssl_module \
   --with-stream_ssl_preread_module --with-mail=dynamic --with-mail_ssl_module \
+  --with-compat \
   --add-dynamic-module=../ModSecurity-nginx && \
   make modules && \
   mkdir -p  /usr/share/nginx/modules && \

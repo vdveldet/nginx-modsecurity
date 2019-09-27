@@ -11,6 +11,7 @@ matrix:
       - NAME="NGINX Container"
       - RUN_IMAGE_NAME=nginx-modsecurity
       - IMAGE_NAME=vdveldet/nginx-modsecurity
+      - IMAGE_COMPILE=nginx-compile
       - DOCKERFILE_COMPILE=Dockerfile_compile
       - VERSION=v0.1
       - NGINX_VERSION=1.17.3
@@ -21,15 +22,18 @@ install: true
 script: pytest || true ? # This is needed for the build to complete
 
 before_install:
-  - docker build --file $DOCKERFILE_COMPILE -t $IMAGE_NAME .
-  - docker run -d -p 127.0.0.1:80:80 --name $RUN_IMAGE_NAME $IMAGE_NAME                 # TEST if the build is running.
+  # First a Compile docker that will deliver the .deb an .so file
+  - docker build --file $DOCKERFILE_COMPILE -t $IMAGE_COMPILE --build-arg VERSION=${VERSION} NGINX_VERSION=${NGINX_VERSION} MODSECURITY=${MODSECURITY} .
+  - docker run -d -p 127.0.0.1:80:80 --name $RUN_IMAGE_NAME $IMAGE_COMPILE  # Test is build is running
+  - docker ps -a
+  - docker logs $RUN_IMAGE_NAME
   - curl http://127.0.0.1/nginx_status
   - mkdir deb
   - docker cp $RUN_IMAGE_NAME:/ModSecurity/modsecurity_*.deb /deb/
-  #- docker cp $RUN_IMAGE_NAME:/ModSecurity-nginx/nginx-${NGINX_VERSION}/objs/ngx_http_modsecurity_module.so /deb/
+  - docker cp $RUN_IMAGE_NAME:/ModSecurity-nginx/nginx-${NGINX_VERSION}/objs/ngx_http_modsecurity_module.so /deb/
   - ls -l /deb/
-  - docker ps -a
-  - docker logs $RUN_IMAGE_NAME
+  # From here the porduction docker is build
+  - docker build --file $DOCKERFILE -t $IMAGE_NAME .
   - echo "$DOCKERHUB_PASSWD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin docker.io
   - docker tag "$IMAGE_NAME" "docker.io/${IMAGE_NAME}:latest"
   - docker tag "$IMAGE_NAME" "docker.io/${IMAGE_NAME}:${VERSION}"

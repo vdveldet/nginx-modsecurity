@@ -32,6 +32,8 @@ RUN cd /etc/nginx/modsec/ && \
 COPY deb/* /tmp/
 RUN  mkdir -p  /usr/share/nginx/modules && \
   cp /tmp/ngx_http_modsecurity_module.so /usr/share/nginx/modules/
+
+RUN  dpkg -i /tmp/modsecurity_3-1_amd64.deb && apt-get install -f 
 COPY nginx/nginx/10-mod-modsecurity.conf /etc/nginx/modules-enabled/
 COPY nginx/modsec/main.conf /etc/nginx/modsec/
 

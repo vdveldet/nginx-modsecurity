@@ -1,8 +1,8 @@
 FROM vdveldet/base-os
 
-ENV VERSION ${VERSION}
-ENV NGINX_VERSION ${NGINX_VERSION}
-ENV MODSECURITY ${MODSECURITY}
+ENV VERSION 0.1
+ENV NGINX_VERSION 1.17.3
+ENV MODSECURITY 3
 
 MAINTAINER vdvelde.t@gmail.com
 LABEL Description="nginx 1.17.3 server + mod_security 3" \

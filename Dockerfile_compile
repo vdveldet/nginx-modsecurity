@@ -29,7 +29,7 @@ RUN cd ModSecurity && \
 
 RUN  cd ModSecurity && \
   export MODSECURITY && \
-  checkinstall --pkgname="modsecurity" --pkgversion="${MODSECURITY}" --pkgrelease"${MODSECURITY_RELEASE}" --maintainer="vdvelde.t@gmail.com" --nodoc --install=yes -y && \
+  checkinstall --pkgname="modsecurity" --pkgversion="${MODSECURITY}" --pkgrelease="${MODSECURITY_RELEASE}" --maintainer="vdvelde.t@gmail.com" --nodoc --install=yes -y && \
   cd ..
 
 # Compile Connector

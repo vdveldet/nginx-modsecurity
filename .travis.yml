@@ -30,9 +30,9 @@ before_install:
   - docker logs $RUN_IMAGE_NAME
   - mkdir deb
   - docker cp $RUN_IMAGE_NAME:/ModSecurity/modsecurity_3-1_amd64.deb deb/
-  - docker cp $RUN_IMAGE_NAME:/ModSecurity-nginx/nginx-${NGINX_VERSION}/objs/ngx_http_modsecurity_module.so deb/
+  - docker cp $RUN_IMAGE_NAME:/usr/share/nginx/modules/ngx_http_modsecurity_module.so deb/
   - ls -l deb/
-  # From here the porduction docker is build
+  # From here the production docker is build
   - docker build --file $DOCKERFILE -t $IMAGE_NAME .
   - echo "$DOCKERHUB_PASSWD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin docker.io
   - docker tag "$IMAGE_NAME" "docker.io/${IMAGE_NAME}:latest"

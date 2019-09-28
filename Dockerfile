@@ -29,6 +29,9 @@ RUN  cd /etc/nginx/modsec && \
 RUN cd /etc/nginx/modsec/ && \
   curl -O https://raw.githubusercontent.com/SpiderLabs/ModSecurity/v3/master/unicode.mapping
 
+COPY deb/* /tmp/
+RUN  mkdir -p  /usr/share/nginx/modules && \
+  cp /tmp/ngx_http_modsecurity_module.so /usr/share/nginx/modules/
 COPY nginx/nginx/10-mod-modsecurity.conf /etc/nginx/modules-enabled/
 COPY nginx/modsec/main.conf /etc/nginx/modsec/
 

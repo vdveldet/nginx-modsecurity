@@ -13,9 +13,11 @@ matrix:
       - IMAGE_NAME=vdveldet/nginx-modsecurity
       - IMAGE_COMPILE=nginx-compile
       - DOCKERFILE_COMPILE=Dockerfile_compile
+      - DOCKERFILE=Dockerfile
       - VERSION=0.1
       - NGINX_VERSION=1.17.3
-      - MODSECURITY=3
+      - MODSECURITY=3.0
+      - MODSECURITY_RELEASE=3
 
 install: true
 
@@ -29,7 +31,7 @@ before_install:
   - curl http://127.0.0.1/nginx_status                                          # This URL is configured in the docker
   - docker logs $RUN_IMAGE_NAME
   - mkdir deb
-  - docker cp $RUN_IMAGE_NAME:/ModSecurity/modsecurity_3-1_amd64.deb deb/
+  - docker cp $RUN_IMAGE_NAME:/ModSecurity/modsecurity_-${MODSECURITY}-${MODSECURITY_RELEASE}_amd64.deb deb/
   - docker cp $RUN_IMAGE_NAME:/usr/share/nginx/modules/ngx_http_modsecurity_module.so deb/
   - ls -l deb/
   # From here the production docker is build

@@ -1,5 +1,10 @@
 FROM vdveldet/base-os
 
+ENV VERSION 0.1
+ENV NGINX_VERSION 1.17.3
+ENV MODSECURITY 3.0
+ENV MODSECURITY_RELEASE 3
+
 MAINTAINER vdvelde.t@gmail.com
 LABEL Description="nginx ${NGINX_VERSION} server + mod_security ${MODSECURITY}" \
       version="${VERSION}"
@@ -8,7 +13,7 @@ LABEL Description="nginx ${NGINX_VERSION} server + mod_security ${MODSECURITY}" 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install software-properties-common && \
   DEBIAN_FRONTEND=noninteractive LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/nginx-mainline
 
-RUN apt-get install -y nginx && rm /etc/nginx/sites-enabled/*
+RUN apt-get install -y nginx=${NGINX_VERSION} && rm /etc/nginx/sites-enabled/*
 
 # forward request and error logs to docker log collector
 RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
@@ -33,7 +38,7 @@ COPY deb/* /tmp/
 RUN  mkdir -p  /usr/share/nginx/modules && \
   cp /tmp/ngx_http_modsecurity_module.so /usr/share/nginx/modules/
 
-RUN  dpkg -i /tmp/modsecurity_3-1_amd64.deb && apt-get install -f 
+RUN  dpkg -i /tmp/modsecurity_3-1_amd64.deb && apt-get install -f
 COPY nginx/nginx/10-mod-modsecurity.conf /etc/nginx/modules-enabled/
 COPY nginx/modsec/main.conf /etc/nginx/modsec/
 

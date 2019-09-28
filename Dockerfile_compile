@@ -2,7 +2,8 @@ FROM vdveldet/base-os
 
 ENV VERSION 0.1
 ENV NGINX_VERSION 1.17.3
-ENV MODSECURITY 3
+ENV MODSECURITY 3.0
+ENV MODSECURITY_RELEASE 3
 
 MAINTAINER vdvelde.t@gmail.com
 LABEL Description="nginx 1.17.3 server + mod_security 3" \
@@ -28,7 +29,7 @@ RUN cd ModSecurity && \
 
 RUN  cd ModSecurity && \
   export MODSECURITY && \
-  checkinstall --pkgname="modsecurity" --pkgversion="${MODSECURITY}" --maintainer="vdvelde.t@gmail.com" --nodoc --install=yes -y && \
+  checkinstall --pkgname="modsecurity" --pkgversion="${MODSECURITY}" --pkgrelease"${MODSECURITY_RELEASE}" --maintainer="vdvelde.t@gmail.com" --nodoc --install=yes -y && \
   cd ..
 
 # Compile Connector

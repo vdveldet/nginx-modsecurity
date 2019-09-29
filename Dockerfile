@@ -17,7 +17,8 @@ RUN echo $LYBERTEAM_TIME_ZONE > /etc/timezone
 RUN usermod -aG www-data www-data
 
 # Add Repo
-RUN DEBIAN_FRONTEND=noninteractive LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/nginx-mainline
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install software-properties-common && \
+  DEBIAN_FRONTEND=noninteractive LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/nginx-mainline
 
 # Download the latest compiled version
 RUN apt-get install -y nginx

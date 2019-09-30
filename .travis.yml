@@ -27,7 +27,7 @@ script: pytest || true ? # This is needed for the build to complete
 
 before_install:
   # First a Compile docker that will deliver the .deb an .so file
-  - docker build --file $DOCKERFILE_COMPILE -t $IMAGE_COMPILE --build-arg VERSION NGINX_VERSION NGINX_FULL_VERSION MODSECURITY MODSECURITY_RELEASE .
+  - docker build --file $DOCKERFILE_COMPILE -t $IMAGE_COMPILE --build-arg VERSION --build-arg NGINX_VERSION --build-arg NGINX_FULL_VERSION --build-arg MODSECURITY --build-arg MODSECURITY_RELEASE .
   - docker run -d -p 127.0.0.1:80:80 --name $RUN_IMAGE_NAME $IMAGE_COMPILE      # Test is build is running
   - docker ps -a
   - curl http://127.0.0.1/nginx_status                                          # This URL is configured in the docker

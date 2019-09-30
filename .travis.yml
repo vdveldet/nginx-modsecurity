@@ -36,7 +36,7 @@ before_install:
   - mkdir deb
   - docker cp $RUN_IMAGE_NAME_COMPILE:/ModSecurity/modsecurity_${MODSECURITY}-${MODSECURITY_RELEASE}_amd64.deb deb/
   - docker cp $RUN_IMAGE_NAME_COMPILE:/usr/share/nginx/modules/ngx_http_modsecurity_module.so deb/
-  - docker cp $RUN_IMAGE_NAME_COMPILE:/tmp/nginx-module-modsecurity3_-${NGINX_VERSION}.deb deb/
+  - docker cp $RUN_IMAGE_NAME_COMPILE:/tmp/nginx-module-modsecurity3_${NGINX_VERSION}.deb deb/
   - ls -l deb/
   - docker stop $RUN_IMAGE_NAME_COMPILE
   # From here the production docker is build
@@ -60,7 +60,7 @@ deploy:
     on:
       branch: master
   - provider: releases
-    api_key: "GITHUB OAUTH TOKEN"
+    api_key: "GITHUB OAUTH TOKEN" #215a3aa117467e95ac952a03a441a7593885a296
     file: deb/nginx-module-modsecurity3_-${NGINX_VERSION}.deb
     skip_cleanup: true
     on:

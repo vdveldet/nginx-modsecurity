@@ -34,8 +34,8 @@ before_install:
   - curl http://127.0.0.1/nginx_status                                          # This URL is configured in the docker
   - docker logs $RUN_IMAGE_NAME_COMPILE
   - mkdir deb
-  - docker cp $RUN_IMAGE_NAME:/ModSecurity/modsecurity_${MODSECURITY}-${MODSECURITY_RELEASE}_amd64.deb deb/
-  - docker cp $RUN_IMAGE_NAME:/usr/share/nginx/modules/ngx_http_modsecurity_module.so deb/
+  - docker cp $RUN_IMAGE_NAME_COMPILE:/ModSecurity/modsecurity_${MODSECURITY}-${MODSECURITY_RELEASE}_amd64.deb deb/
+  - docker cp $RUN_IMAGE_NAME_COMPILE:/usr/share/nginx/modules/ngx_http_modsecurity_module.so deb/
   - ls -l deb/
   # From here the production docker is build
   - docker build --file $DOCKERFILE -t $IMAGE_NAME --build-arg VERSION --build-arg NGINX_VERSION --build-arg NGINX_FULL_VERSION --build-arg MODSECURITY --build-arg MODSECURITY_RELEASE .

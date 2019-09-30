@@ -37,7 +37,7 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
   ln -sf /dev/stdout /var/log/modsec_audit.log
 
 # Copy in compiled packages
-COPY deb/* /tmp
+COPY deb/* /tmp/
 
 # Copy Nginx-modsecurity module to the modules directory
 RUN mv /tmp/ngx_http_modsecurity_module.so /usr/share/nginx/modules/

@@ -16,8 +16,16 @@ RUN echo $LYBERTEAM_TIME_ZONE > /etc/timezone
 # Modify user to group
 RUN usermod -aG www-data www-data
 
-# Add Repo
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install software-properties-common && \
+
+# Install additional packages
+RUN DEBIAN_FRONTEND=noninteractive apt-get update -y && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y \
+  ca-certificates \
+  tzdata \
+  sendmail && \
+  DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade && \
+  DEBIAN_FRONTEND=noninteractive apt-get -y install software-properties-common && \
+  DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -f noninteractive tzdata && \
   DEBIAN_FRONTEND=noninteractive LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/nginx-mainline
 
 # Download the latest compiled version

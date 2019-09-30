@@ -7,4 +7,3 @@ Depends: nginx (>= 1.2.13), libyajl2, openssl
 Maintainer: Tom Van de Velde <vdvelde.t@gmail.com>
 Description: ModSecurity
  compiled as module for Nginx
- 

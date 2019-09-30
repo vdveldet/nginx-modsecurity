@@ -1,6 +1,6 @@
 # nginx-modsecurity
 
-Build status (https://travis-ci.org/vdveldet/nginx-modsecurity.svg?branch=master)
+Build status ![Build status](https://travis-ci.org/vdveldet/nginx-modsecurity.svg?branch=master)
 
 NGINX server combined with security of ModSecurity available in a docker.
 

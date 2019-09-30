@@ -30,6 +30,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -y && \
   ca-certificates \
   tzdata \
   curl \
+  libyajl2 \
+  openssl \
   sendmail && \
   DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade && \
   DEBIAN_FRONTEND=noninteractive apt-get -y install software-properties-common && \

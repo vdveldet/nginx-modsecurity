@@ -22,6 +22,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -y && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y \
   ca-certificates \
   tzdata \
+  curl \
   sendmail && \
   DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade && \
   DEBIAN_FRONTEND=noninteractive apt-get -y install software-properties-common && \

@@ -1,9 +1,16 @@
 FROM ubuntu:bionic
 
-ENV VERSION 0.1
-ENV NGINX_VERSION 1.17.3
-ENV MODSECURITY 3.0
-ENV MODSECURITY_RELEASE 3
+ARG VERSION
+ARG NGINX_VERSION
+ARG NGINX_FULL_VERSION
+ARG MODSECURITY
+ARG MODSECURITY_RELEASE
+
+ENV VERSION $VERSION
+ENV NGINX_VERSION $NGINX_VERSION
+ENV NGINX_FULL_VERSION $NGINX_FULL_VERSION
+ENV MODSECURITY $MODSECURITY
+ENV MODSECURITY_RELEASE $MODSECURITY_RELEASE
 
 MAINTAINER vdvelde.t@gmail.com
 LABEL Description="nginx 1.17.3 server + mod_security 3" \
@@ -29,8 +36,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -y && \
   DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -f noninteractive tzdata && \
   DEBIAN_FRONTEND=noninteractive LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/nginx-mainline
 
-# Download the latest compiled version
-RUN apt-get install -y nginx
+# Download nginx Compiled version
+RUN apt-get install -y nginx=${NGINX_FULL_VERSION}
 
 # forward request and error logs to docker log collector
 RUN ln -sf /dev/stdout /var/log/nginx/access.log && \

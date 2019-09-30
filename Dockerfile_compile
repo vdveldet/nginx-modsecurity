@@ -1,20 +1,27 @@
 FROM vdveldet/base-os
 
-ENV VERSION 0.1
-ENV NGINX_VERSION 1.17.3
-ENV MODSECURITY 3.0
-ENV MODSECURITY_RELEASE 3
+ARG VERSION
+ARG NGINX_VERSION
+ARG NGINX_FULL_VERSION
+ARG MODSECURITY
+ARG MODSECURITY_RELEASE
+
+ENV VERSION $VERSION
+ENV NGINX_VERSION $NGINX_VERSION
+ENV NGINX_FULL_VERSION $NGINX_FULL_VERSION
+ENV MODSECURITY $MODSECURITY
+ENV MODSECURITY_RELEASE $MODSECURITY_RELEASE
 
 MAINTAINER vdvelde.t@gmail.com
-LABEL Description="nginx 1.17.3 server + mod_security 3" \
+LABEL Description="nginx ${NGINX_VERSION} server + mod_security ${MODSECURITY}" \
       version="${VERSION}"
 
 # Add Repo
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install software-properties-common && \
   DEBIAN_FRONTEND=noninteractive LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/nginx-mainline
 
-# Download the latest compiled version
-RUN apt-get install -y nginx
+# Download nginx Compiled version
+RUN apt-get install -y nginx=${NGINX_FULL_VERSION}
 RUN apt-get install -y apt-utils autoconf automake build-essential git libcurl4-openssl-dev libgeoip-dev liblmdb-dev libpcre++-dev libtool libxml2-dev libyajl-dev pkgconf wget zlib1g-dev libyajl2 openssl libssl-dev libperl-dev libxslt-dev checkinstall
 
 RUN git clone --depth 1 -b v3/master --single-branch https://github.com/SpiderLabs/ModSecurity

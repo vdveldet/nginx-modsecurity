@@ -14,10 +14,12 @@ matrix:
       - IMAGE_COMPILE=nginx-compile
       - DOCKERFILE_COMPILE=Dockerfile_compile
       - DOCKERFILE=Dockerfile
-      - VERSION=0.1
+      - VERSION=0.2
       - NGINX_VERSION=1.17.3
+      - NGINX_FULL_VERSION=1.17.3-1+ubuntu18.04.1+deb.sury.org+1
       - MODSECURITY=3.0
       - MODSECURITY_RELEASE=3
+
 
 install: true
 
@@ -25,7 +27,7 @@ script: pytest || true ? # This is needed for the build to complete
 
 before_install:
   # First a Compile docker that will deliver the .deb an .so file
-  - docker build --file $DOCKERFILE_COMPILE -t $IMAGE_COMPILE --build-arg VERSION=${VERSION} --build-arg NGINX_VERSION=${NGINX_VERSION} --build-arg MODSECURITY=${MODSECURITY} .
+  - docker build --file $DOCKERFILE_COMPILE -t $IMAGE_COMPILE --build-arg VERSION NGINX_VERSION NGINX_FULL_VERSION MODSECURITY MODSECURITY_RELEASE .
   - docker run -d -p 127.0.0.1:80:80 --name $RUN_IMAGE_NAME $IMAGE_COMPILE      # Test is build is running
   - docker ps -a
   - curl http://127.0.0.1/nginx_status                                          # This URL is configured in the docker
@@ -35,7 +37,11 @@ before_install:
   - docker cp $RUN_IMAGE_NAME:/usr/share/nginx/modules/ngx_http_modsecurity_module.so deb/
   - ls -l deb/
   # From here the production docker is build
-  - docker build --file $DOCKERFILE -t $IMAGE_NAME .
+  - docker build --file $DOCKERFILE -t $IMAGE_NAME --build-arg VERSION NGINX_VERSION NGINX_FULL_VERSION MODSECURITY MODSECURITY_RELEASE .
+  - docker run -d -p 127.0.0.1:80:80 --name $RUN_IMAGE_NAME $IMAGE_NAME      # Test is build is running
+  - docker ps -a
+  - curl http://127.0.0.1/nginx_status                                          # This URL is configured in the docker
+  - docker logs $RUN_IMAGE_NAME
   - echo "$DOCKERHUB_PASSWD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin docker.io
   - docker tag "$IMAGE_NAME" "docker.io/${IMAGE_NAME}:latest"
   - docker tag "$IMAGE_NAME" "docker.io/${IMAGE_NAME}:${VERSION}"

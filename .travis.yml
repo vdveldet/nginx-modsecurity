@@ -60,8 +60,8 @@ deploy:
     on:
       branch: master
   - provider: releases
-    api_key: "GITHUB OAUTH TOKEN" #215a3aa117467e95ac952a03a441a7593885a296
-    file: deb/nginx-module-modsecurity3_-${NGINX_VERSION}.deb
+    api_key: "${GH_TOKEN}"
+    file: deb/nginx-module-modsecurity3_${NGINX_VERSION}.deb
     skip_cleanup: true
     on:
       tags: true

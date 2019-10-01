@@ -51,7 +51,7 @@ COPY deb/* /tmp/
 
 # Copy Nginx-modsecurity module to the modules directory
 # RUN mv /tmp/ngx_http_modsecurity_module.so /usr/share/nginx/modules/
-RUN dpkg -i /tmp/nginx-module-modsecurity3_-${NGINX_VERSION}.deb
+RUN dpkg -i /tmp/nginx-module-modsecurity3_${NGINX_VERSION}.deb
 
 # Install the package
 RUN dpkg -i /tmp/modsecurity_${MODSECURITY}-${MODSECURITY_RELEASE}_amd64.deb &&  apt-get install -f && apt -y autoremove

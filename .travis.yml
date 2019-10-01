@@ -9,18 +9,54 @@ matrix:
   - python:
     env:
       - NAME="NGINX Container"
+<<<<<<< HEAD
       - IMAGE_NAME=vdveldet/nginx-modsecurity
       - DOCKERFILE=Dockerfile
       - VERSION=v0.1
+=======
+      - RUN_IMAGE_NAME=nginx-modsecurity
+      - RUN_IMAGE_NAME_COMPILE=modsecurity-compile
+      - IMAGE_NAME=vdveldet/nginx-modsecurity
+      - IMAGE_COMPILE=nginx-compile
+      - DOCKERFILE_COMPILE=Dockerfile_compile
+      - DOCKERFILE=Dockerfile
+      - VERSION=0.2
+      - NGINX_VERSION=1.17.3
+      - NGINX_FULL_VERSION=1.17.3-1+ubuntu18.04.1+deb.sury.org+1
+      - MODSECURITY=3.0
+      - MODSECURITY_RELEASE=3
+
+>>>>>>> 58bb27a2e476084bff9dad17544b3702593ede22
 
 install: true
 
 script: pytest || true ? # This is needed for the build to complete
 
 before_install:
+<<<<<<< HEAD
   - docker build --file $DOCKERFILE -t $IMAGE_NAME .
   - docker run -d -p 127.0.0.1:80:4567 --name $RUN_IMAGE_NAME $IMAGE_NAME                 # TEST if the build is running.
   - docker ps -a
+=======
+  # First a Compile docker that will deliver the .deb an .so file
+  - docker build --file $DOCKERFILE_COMPILE -t $IMAGE_COMPILE --build-arg VERSION --build-arg NGINX_VERSION --build-arg NGINX_FULL_VERSION --build-arg MODSECURITY --build-arg MODSECURITY_RELEASE .
+  - docker run -d -p 127.0.0.1:80:80 --name $RUN_IMAGE_NAME_COMPILE $IMAGE_COMPILE      # Test is build is running
+  - docker ps -a
+  - curl http://127.0.0.1/nginx_status                                          # This URL is configured in the docker
+  - docker logs $RUN_IMAGE_NAME_COMPILE
+  - mkdir deb
+  - docker cp $RUN_IMAGE_NAME_COMPILE:/ModSecurity/modsecurity_${MODSECURITY}-${MODSECURITY_RELEASE}_amd64.deb deb/
+  - docker cp $RUN_IMAGE_NAME_COMPILE:/usr/share/nginx/modules/ngx_http_modsecurity_module.so deb/
+  - docker cp $RUN_IMAGE_NAME_COMPILE:/tmp/nginx-module-modsecurity3_${NGINX_VERSION}.deb deb/
+  - ls -l deb/
+  - docker stop $RUN_IMAGE_NAME_COMPILE
+  # From here the production docker is build
+  - docker build --file $DOCKERFILE -t $IMAGE_NAME --build-arg VERSION --build-arg NGINX_VERSION --build-arg NGINX_FULL_VERSION --build-arg MODSECURITY --build-arg MODSECURITY_RELEASE .
+  - docker run -d -p 127.0.0.1:80:80 --name $RUN_IMAGE_NAME $IMAGE_NAME      # Test is build is running
+  - docker ps -a
+  - curl http://127.0.0.1/nginx_status || true                               # This URL is configured in the docker
+  - curl http://127.0.0.1/test&id=1234 || true
+>>>>>>> 58bb27a2e476084bff9dad17544b3702593ede22
   - docker logs $RUN_IMAGE_NAME
   - echo "$DOCKERHUB_PASSWD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin docker.io
   - docker tag "$IMAGE_NAME" "docker.io/${IMAGE_NAME}:latest"
@@ -35,6 +71,15 @@ deploy:
     script: docker push "docker.io/${IMAGE_NAME}:${VERSION}"
     on:
       branch: master
+<<<<<<< HEAD
+=======
+  - provider: releases
+    api_key: "${GH_TOKEN}"
+    file: deb/nginx-module-modsecurity3_${NGINX_VERSION}.deb
+    skip_cleanup: true
+    on:
+      tags: true
+>>>>>>> 58bb27a2e476084bff9dad17544b3702593ede22
 
 after_script:
   - docker pull "docker.io/${IMAGE_NAME}:latest"

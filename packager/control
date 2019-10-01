@@ -1,0 +1,9 @@
+Package: nginx-module-modsecurity
+Version: 1.0
+Section: base
+Priority: optional
+Architecture: amd64
+Depends: nginx (>= 1.17.3), libyajl2, openssl
+Maintainer: Tom Van de Velde <vdvelde.t@gmail.com>
+Description: ModSecurity
+ compiled as module for Nginx

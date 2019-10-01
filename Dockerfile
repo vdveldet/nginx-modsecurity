@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 FROM vdveldet/base-os
 
 MAINTAINER vdvelde.t@gmail.com
@@ -117,12 +118,71 @@ RUN apt-get remove -y  autoconf-archive gnu-standards autoconf-doc gettext binut
   libpcre++-dev libtool libxml2-dev libyajl-dev pkgconf wget zlib1g-dev gcc make mc
 
 RUN apt -y autoremove
+=======
+FROM ubuntu:bionic
+
+ARG VERSION
+ARG NGINX_VERSION
+ARG NGINX_FULL_VERSION
+ARG MODSECURITY
+ARG MODSECURITY_RELEASE
+
+ENV VERSION $VERSION
+ENV NGINX_VERSION $NGINX_VERSION
+ENV NGINX_FULL_VERSION $NGINX_FULL_VERSION
+ENV MODSECURITY $MODSECURITY
+ENV MODSECURITY_RELEASE $MODSECURITY_RELEASE
+
+MAINTAINER vdvelde.t@gmail.com
+LABEL Description="nginx 1.17.3 server + mod_security 3" \
+      version="${VERSION}"
+
+# Add default timezone
+ENV LYBERTEAM_TIME_ZONE Europe/Brussels
+RUN echo $LYBERTEAM_TIME_ZONE > /etc/timezone
+
+# Modify user to group
+RUN usermod -aG www-data www-data
+
+
+# Install additional packages
+RUN DEBIAN_FRONTEND=noninteractive apt-get update -y && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y \
+  ca-certificates \
+  tzdata \
+  curl \
+  libyajl2 \
+  openssl \
+  sendmail && \
+  DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade && \
+  DEBIAN_FRONTEND=noninteractive apt-get -y install software-properties-common && \
+  DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -f noninteractive tzdata && \
+  DEBIAN_FRONTEND=noninteractive LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/nginx-mainline
+
+# Download nginx Compiled version
+RUN apt-get install -y nginx=${NGINX_FULL_VERSION}
+>>>>>>> 58bb27a2e476084bff9dad17544b3702593ede22
 
 # forward request and error logs to docker log collector
 RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
   ln -sf /dev/stderr /var/log/nginx/error.log && \
   ln -sf /dev/stdout /var/log/modsec_audit.log
 
+<<<<<<< HEAD
+=======
+# Copy in compiled packages
+COPY deb/* /tmp/
+
+# Copy Nginx-modsecurity module to the modules directory
+# RUN mv /tmp/ngx_http_modsecurity_module.so /usr/share/nginx/modules/
+RUN dpkg -i /tmp/nginx-module-modsecurity3_${NGINX_VERSION}.deb
+
+# Install the package
+RUN dpkg -i /tmp/modsecurity_${MODSECURITY}-${MODSECURITY_RELEASE}_amd64.deb &&  apt-get install -f && apt -y autoremove
+
+
+
+>>>>>>> 58bb27a2e476084bff9dad17544b3702593ede22
 # Configure mod ModSecurity
 RUN mkdir -p /etc/nginx/modsec/
 RUN  cd /etc/nginx/modsec && \
@@ -145,4 +205,8 @@ COPY nginx/nginx/nginx.conf /etc/nginx/nginx.conf
 
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 
+<<<<<<< HEAD
 CMD service nginx start
+=======
+CMD /usr/sbin/nginx
+>>>>>>> 58bb27a2e476084bff9dad17544b3702593ede22

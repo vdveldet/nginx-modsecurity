@@ -61,7 +61,9 @@ RUN dpkg -i /tmp/nginx-module-modsecurity3_${NGINX_VERSION}.deb && \
 
 # PATCH Mod security installation
 RUN cd /etc/nginx/modsec/ && \
-  curl -O https://raw.githubusercontent.com/SpiderLabs/ModSecurity/v3/master/unicode.mapping
+  curl -O https://raw.githubusercontent.com/SpiderLabs/ModSecurity/v3/master/unicode.mapping && \
+  mkdir -p /var/lib/nginx/body/ && \
+  chown www-data.www-data /var/lib/nginx/body
 
 COPY nginx/nginx/10-mod-modsecurity.conf /etc/nginx/modules-enabled/
 COPY nginx/modsec/main.conf /etc/nginx/modsec/
@@ -70,5 +72,12 @@ COPY nginx/nginx/default.conf /etc/nginx/conf.d/
 COPY nginx/nginx/nginx.conf /etc/nginx/nginx.conf
 
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
+
+USER www-data
+
+# outsite port
+EXPOSE 80
+
+VOLUME /etc/nginx
 
 CMD /usr/sbin/nginx

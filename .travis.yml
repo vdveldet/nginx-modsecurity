@@ -43,7 +43,7 @@ before_install:
   - docker run -d -p 127.0.0.1:80:80 --name $RUN_IMAGE_NAME $IMAGE_NAME      # Test is build is running
   - docker ps -a
   - curl http://127.0.0.1/nginx_status || true                               # This URL is configured in the docker
-  - curl http://127.0.0.1/test&id=1234 || true
+  - curl http://127.0.0.1?testparam=test || true
   - docker logs $RUN_IMAGE_NAME
   - echo "$DOCKERHUB_PASSWD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin docker.io
   - docker tag "$IMAGE_NAME" "docker.io/${IMAGE_NAME}:latest"

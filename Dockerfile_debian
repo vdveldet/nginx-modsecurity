@@ -31,6 +31,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -y && \
   curl \
   libyajl2 \
   openssl \
+  git \
   sendmail && \
   DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade && \
   DEBIAN_FRONTEND=noninteractive apt-get -y install software-properties-common && \

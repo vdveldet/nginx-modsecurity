@@ -106,7 +106,7 @@ COPY nginx/nginx/nginx.conf /etc/nginx/nginx.conf
 # Create the nginx-module-modsecurity_1.0 package
   RUN cd /tmp/ && \
     mkdir -p /tmp/nginx-module-modsecurity3_${NGINX_VERSION}/etc/nginx/ && \
-    rsync -Rratv /etc/nginx/* /tmp/nginx-module-modsecurity3_${NGINX_VERSION}/etc/nginx/
+    rsync -Rratv /etc/nginx/* /tmp/nginx-module-modsecurity3_${NGINX_VERSION}/etc/nginx/ && \
     dpkg-deb --build nginx-module-modsecurity3_${NGINX_VERSION} && \
     ls -l
 

@@ -68,7 +68,8 @@ RUN dpkg -i /tmp/nginx-module-modsecurity3_${NGINX_VERSION}.deb && \
 RUN cd /etc/nginx/modsec/ && \
   curl -O https://raw.githubusercontent.com/SpiderLabs/ModSecurity/v3/master/unicode.mapping && \
   mkdir -p /var/lib/nginx/body/ && \
-  chown www-data.www-data /var/lib/nginx/body
+  mkdir -p /var/lib/nginx/proxy/ && \
+  chown -R www-data.www-data /var/lib/nginx/
 
 COPY nginx/nginx/10-mod-modsecurity.conf /etc/nginx/modules-enabled/
 COPY nginx/modsec/main.conf /etc/nginx/modsec/

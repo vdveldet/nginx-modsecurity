@@ -1,5 +1,5 @@
-Package: nginx-module-modsecurity
-Version: 1.0
+Package: nginx-module-modsecurity3
+Version: 1.17.3
 Section: base
 Priority: optional
 Architecture: amd64

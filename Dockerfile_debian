@@ -84,6 +84,6 @@ RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 # outsite port
 EXPOSE 80
 
-VOLUME /etc/nginx
+#VOLUME /etc/nginx
 
 CMD /usr/sbin/nginx

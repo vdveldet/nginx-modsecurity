@@ -71,6 +71,7 @@ RUN cd /etc/nginx/modsec/ && \
   mkdir -p /var/lib/nginx/proxy/ && \
   mkdir -p /var/lib/nginx/fastcgi/ && \
   mkdir -p /var/lib/nginx/uwsgi/ && \
+  mkdir -p /var/lib/nginx/scgi/ && \
   chown -R www-data.www-data /var/lib/nginx/
 
 COPY nginx/nginx/10-mod-modsecurity.conf /etc/nginx/modules-enabled/

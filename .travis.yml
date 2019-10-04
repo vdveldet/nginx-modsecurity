@@ -15,7 +15,7 @@ matrix:
       - IMAGE_COMPILE=nginx-compile
       - DOCKERFILE_COMPILE=Dockerfile_compile_debian
       - DOCKERFILE=Dockerfile_debian
-      - VERSION=0.11
+      - VERSION=0.12
       - NGINX_VERSION=1.17.3
       - NGINX_FULL_VERSION=1.17.3-1+ubuntu18.04.1+deb.sury.org+1
       - MODSECURITY=3.0
@@ -61,6 +61,12 @@ deploy:
   - provider: releases
     api_key: ${GH_TOKEN}
     file: deb/nginx-module-modsecurity3_${NGINX_VERSION}.deb
+    skip_cleanup: true
+    on:
+      tags: true
+  - provider: releases
+    api_key: ${GH_TOKEN}
+    file: deb/modsecurity_${MODSECURITY}-${MODSECURITY_RELEASE}_amd64.deb
     skip_cleanup: true
     on:
       tags: true

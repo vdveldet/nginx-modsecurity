@@ -73,7 +73,7 @@ RUN cd /etc/nginx/modsec/ && \
   mkdir -p /var/lib/nginx/uwsgi/ && \
   mkdir -p /var/lib/nginx/scgi/ && \
   chown -R www-data.www-data /var/lib/nginx/ && \
-  chown 777 /run
+  chmod 777 /run
 
 COPY nginx/nginx/10-mod-modsecurity.conf /etc/nginx/modules-enabled/
 COPY nginx/modsec/main.conf /etc/nginx/modsec/

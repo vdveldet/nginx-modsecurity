@@ -85,7 +85,7 @@ RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 #USER www-data
 
 # outsite port
-EXPOSE 80
+EXPOSE 8080
 
 #VOLUME /etc/nginx
 

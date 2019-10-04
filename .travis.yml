@@ -15,7 +15,7 @@ matrix:
       - IMAGE_COMPILE=nginx-compile
       - DOCKERFILE_COMPILE=Dockerfile_compile_debian
       - DOCKERFILE=Dockerfile_debian
-      - VERSION=0.12
+      - VERSION=0.13
       - NGINX_VERSION=1.17.3
       - NGINX_FULL_VERSION=1.17.3-1+ubuntu18.04.1+deb.sury.org+1
       - MODSECURITY=3.0
@@ -40,7 +40,7 @@ before_install:
   - docker stop $RUN_IMAGE_NAME_COMPILE
   # From here the production docker is build
   - docker build --file $DOCKERFILE -t $IMAGE_NAME --build-arg VERSION --build-arg NGINX_VERSION --build-arg NGINX_FULL_VERSION --build-arg MODSECURITY --build-arg MODSECURITY_RELEASE .
-  - docker run -d -p 127.0.0.1:80:80 --name $RUN_IMAGE_NAME $IMAGE_NAME      # Test is build is running
+  - docker run -d -p 127.0.0.1:80:8080 --name $RUN_IMAGE_NAME $IMAGE_NAME      # Test is build is running
   - docker ps -a
   - curl http://127.0.0.1/nginx_status || true                               # This URL is configured in the docker
   - curl http://127.0.0.1?testparam=test || true

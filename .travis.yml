@@ -15,9 +15,8 @@ matrix:
       - IMAGE_COMPILE=nginx-compile
       - DOCKERFILE_COMPILE=Dockerfile_compile_debian
       - DOCKERFILE=Dockerfile_debian
-      - VERSION=0.18
-      - NGINX_VERSION=1.17.3
-      - NGINX_FULL_VERSION=1.17.3-1+ubuntu18.04.1+deb.sury.org+1
+      - VERSION=0.1
+      - NGINX_VERSION=1.17.5
       - MODSECURITY=3.0
       - MODSECURITY_RELEASE=3
 
@@ -27,7 +26,7 @@ script: pytest || true ? # This is needed for the build to complete
 
 before_install:
   # First a Compile docker that will deliver the .deb an .so file
-  - docker build --file $DOCKERFILE_COMPILE -t $IMAGE_COMPILE --build-arg VERSION --build-arg NGINX_VERSION --build-arg NGINX_FULL_VERSION --build-arg MODSECURITY --build-arg MODSECURITY_RELEASE .
+  - docker build --file $DOCKERFILE_COMPILE -t $IMAGE_COMPILE --build-arg VERSION --build-arg NGINX_VERSION --build-arg MODSECURITY --build-arg MODSECURITY_RELEASE .
   - docker run -d -p 127.0.0.1:80:8080 --name $RUN_IMAGE_NAME_COMPILE $IMAGE_COMPILE      # Test is build is running
   - docker ps -a
   - curl http://127.0.0.1/nginx_status                                          # This URL is configured in the docker
@@ -39,11 +38,11 @@ before_install:
   - ls -l deb/
   - docker stop $RUN_IMAGE_NAME_COMPILE
   # From here the production docker is build
-  - docker build --file $DOCKERFILE -t $IMAGE_NAME --build-arg VERSION --build-arg NGINX_VERSION --build-arg NGINX_FULL_VERSION --build-arg MODSECURITY --build-arg MODSECURITY_RELEASE .
+  - docker build --file $DOCKERFILE -t $IMAGE_NAME --build-arg VERSION --build-arg NGINX_VERSION --build-arg MODSECURITY --build-arg MODSECURITY_RELEASE .
   - docker run -d -p 127.0.0.1:80:8080 --name $RUN_IMAGE_NAME $IMAGE_NAME      # Test is build is running
   - docker ps -a
   - curl http://127.0.0.1/nginx_status || true                               # This URL is configured in the docker
-  - curl http://127.0.0.1?testparam=test || true
+  - curl http://127.0.0.1/index.html?testparam=test || true
   - docker logs $RUN_IMAGE_NAME
   - echo "$DOCKERHUB_PASSWD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin docker.io
   - docker tag "$IMAGE_NAME" "docker.io/${IMAGE_NAME}:latest"

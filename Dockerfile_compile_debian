@@ -20,7 +20,30 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install software-properties-common
 
 # Download nginx Compiled version
 RUN apt-get install -y nginx
-RUN apt-get install -y apt-utils autoconf automake build-essential git libcurl4-openssl-dev libgeoip-dev liblmdb-dev libpcre++-dev libtool libxml2-dev libyajl-dev pkgconf wget zlib1g-dev libyajl2 openssl libssl-dev libperl-dev libxslt-dev checkinstall rsync
+RUN apt-get install -y \
+  apt-utils \
+  autoconf \
+  automake \
+  build-essential \
+  git \
+  libcurl4-openssl-dev \
+  libgeoip-dev \
+  liblmdb-dev \
+  libpcre++-dev \
+  libtool \
+  libxml2-dev \
+  libyajl-dev \
+  pkgconf \
+  wget \
+  zlib1g-dev \
+  libyajl2 \
+  openssl \
+  libssl-dev \
+  libperl-dev \
+  libxslt-dev \
+  checkinstall \
+  rsync \
+  libgd-dev
 
 RUN git clone --depth 1 -b v3/master --single-branch https://github.com/SpiderLabs/ModSecurity
 RUN cd ModSecurity && \

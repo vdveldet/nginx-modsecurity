@@ -47,15 +47,12 @@ RUN git clone --depth 1 https://github.com/SpiderLabs/ModSecurity-nginx.git
 # Download the nginx source code
 RUN NGINX_VERSION=$(nginx -v 2>&1| awk -F "/" {'print $2'} | awk {'print $1'}) && \
   wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && tar zxvf nginx-${NGINX_VERSION}.tar.gz && \
-  cd nginx-${NGINX_VERSION}
-
-# Create the compile command
-RUN COMPILE_OPT=$(nginx -V 2>&1 | grep "configure arguments" | \
-    awk -F: {'print $2'} | \
-    sed 's/--add-dynamic-module=.*//g') && \
-    echo "./configure --add-dynamic-module=../ModSecurity-nginx ${COMPILE_OPT}" > comp.ksh
-
-RUN cat comp.ksh && \
+  cd nginx-${NGINX_VERSION} && \
+  COMPILE_OPT=$(nginx -V 2>&1 | grep "configure arguments" | \
+  awk -F: {'print $2'} | \
+  sed 's/--add-dynamic-module=.*//g') && \
+  echo "./configure --add-dynamic-module=../ModSecurity-nginx ${COMPILE_OPT}" > comp.ksh  && \
+  cat comp.ksh && \
   bash comp.ksh && \
   make modules && \
   mkdir -p  /usr/share/nginx/modules && \
